@@ -1,0 +1,33 @@
+class Solution {
+    public double minmaxGasDist(int[] stations, int k) {
+        // Write your code here
+        double start = 0, end = stations[stations.length - 1] - stations[0];
+        double eps = 1e-6;
+        
+        while (start + eps < end) {
+            double mid = (start + end) / 2;
+            int count = checkStations(stations, mid);
+            if (count > k) {
+                // minimum stations added is > K
+                // so we nned to increase the mid
+                start = mid;
+            } else {
+                // minimum stations added is <= K
+                // so we need to narrow the mid
+                end = mid;
+            }
+        }
+        return start;
+    }
+    
+    // get the minimum stations count at max distance 'dist'
+    private int checkStations(int[] stations, double dist) {
+        int count = 0;
+        for (int i = 1; i < stations.length; i++) {
+            count += (int) ((stations[i] - stations[i - 1]) / dist);
+            // for example, 10 / 3, at least put 3 stations
+            // to satisfy the condition: max distance is 'dist'
+        }
+        return count;
+    }
+}
