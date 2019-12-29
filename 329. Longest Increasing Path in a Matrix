@@ -1,0 +1,32 @@
+class Solution {
+    public int longestIncreasingPath(int[][] matrix) {
+        if(matrix == null || matrix.length == 0 || matrix[0] == null || matrix[0].length == 0)
+            return 0;
+        int row = matrix.length, col = matrix[0].length;
+        int[][] dp = new int[row][col];
+        int max = 0;
+        
+        for(int i=0; i<row; i++) {
+            for(int j=0; j<col; j++) {
+                max = Math.max(max, helper(matrix, i, j, Integer.MIN_VALUE, dp));
+            }
+        }
+        return max;
+    }
+    
+    private int helper(int[][] matrix, int i, int j, int curNum, int[][] dp) {
+        int row = matrix.length, col = matrix[0].length;
+        if(i<0 || i>= row || j<0 || j>= col || matrix[i][j] <= curNum)
+            return 0;
+        if(dp[i][j] != 0) return dp[i][j];
+        int max= 0;
+        
+        max = Math.max(max, helper(matrix, i+1, j, matrix[i][j], dp));
+        max = Math.max(max, helper(matrix, i-1, j, matrix[i][j], dp));
+        max = Math.max(max, helper(matrix, i, j+1, matrix[i][j], dp));
+        max = Math.max(max, helper(matrix, i, j-1, matrix[i][j], dp));
+        
+        dp[i][j] = max+1;
+        return max+1;
+    }
+}
