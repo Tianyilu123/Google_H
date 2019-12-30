@@ -1,5 +1,5 @@
 class Solution {
-    int[][] dirs = {{-1,0},{0,1},{1,0},{0,-1}};
+    int[][] dirs = {{0,-1},{1,0},{0,1},{-1,0}};
     public void cleanRoom(Robot robot) {
         dfs(robot, 0, 0, 0, new HashSet<>());
     }
@@ -13,9 +13,13 @@ class Solution {
             int newY = y+dirs[nextDir][1];
             if(!visited.contains(newX+"-"+newY) && robot.move()) {
                 dfs(robot, newX, newY, nextDir, visited);
+                backtrack(robot);
             }
             robot.turnRight();
         }
+    }
+    
+    private void backtrack(Robot robot) {
         robot.turnRight();
         robot.turnRight();
         robot.move();
