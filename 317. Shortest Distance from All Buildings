@@ -1,0 +1,69 @@
+class Solution {
+    public int shortestDistance(int[][] grid) {
+        if(grid == null || grid.length == 0 || grid[0] == null || grid[0].length == 0) 
+            return 0;
+        int row = grid.length, col = grid[0].length;
+        int buildings = 0;
+        int[][] reaches = new int[row][col];
+        int[][] dists = new int[row][col];
+        int minDist = Integer.MAX_VALUE;
+        
+        for(int i=0; i<row; i++) {
+            for(int j=0; j<col; j++) {
+                if(grid[i][j] == 1) {
+                    buildings++;
+                    bfs(grid, i, j, reaches, dists, new boolean[row][col]);
+                }
+            }
+        }
+        
+        for(int i=0; i<row; i++) {
+            for(int j=0; j<col; j++) {
+                if(reaches[i][j] == buildings && dists[i][j] < minDist) {
+                    minDist = dists[i][j];
+                }
+            }
+        }
+        
+        return minDist == Integer.MAX_VALUE ? -1 : minDist;
+    }
+    
+    private void bfs(int[][] grid, int i, int j, int[][] reaches, int[][] dists, 
+                                                    boolean[][] visited) {
+        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{i,j});
+        visited[i][j] = true;
+        int minLen = 0;
+        
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            minLen++;
+            while(size > 0) {
+                size--;
+                int[] cur = queue.poll();
+                for(int[] dir : dirs) {
+                    int ii = cur[0] + dir[0];
+                    int jj = cur[1] + dir[1];
+                    
+                    if(!isValid(grid, ii, jj, visited)) continue;
+                    
+                    visited[ii][jj] = true;
+                    queue.offer(new int[] {ii, jj});
+                    dists[ii][jj] += minLen;
+                    reaches[ii][jj]++;
+                }
+            }
+        }
+    }
+    
+    private boolean isValid(int[][] grid, int i, int j, boolean[][] visited) {
+        int row = grid.length, col = grid[0].length;
+        if(i<0 || i>=row || j<0 || j>=col) return false;
+        if(visited[i][j] == true) return false;
+        if(grid[i][j] != 0) return false;
+        
+        return true;
+    }
+}
+
