@@ -13,8 +13,8 @@ class Solution {
     
         long res = PorL[n];
         for (int i = 0; i < n; i++) { // inserting A into (n-1)-length strings
-    	    long s = (PorL[i] * PorL[n - i - 1]) % M;
-            res = (res + s) % M;
+    	    long insertA = (PorL[i] * PorL[n - i - 1]) % M;
+            res = (res + insertA) % M;
         }
     
         return (int) res;
