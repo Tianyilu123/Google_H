@@ -18,9 +18,11 @@ class Solution {
                 sp = match;
             } else return false;
         }
+        
         while(pp<p.length()&& p.charAt(pp)=='*'){
             pp++;
         }
+        
         return pp==p.length();
     }
 }
