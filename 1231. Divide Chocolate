@@ -1,48 +1,45 @@
 // method 1:
 class Solution {
     public int maximizeSweetness(int[] sweetness, int K) {
-    // 定义二分查找使用的左右指针
-    // 初始时左指针为sweetness中最小值，
-    // 右指针为sweetness之和
-    int right=0,left=Integer.MAX_VALUE;
-    for(int sweet : sweetness){
-        right+=sweet;
-        left=Math.min(left, sweet);
-    } 
-    int res=0; // 返回结果
-    while(left<right){ // 开始二分查找
-        int mid=(left+right)/2; // 中间值
-        int sum=0; // 当前份的甜度和
-        int count=0; // 已分完的份数
-        int min=Integer.MAX_VALUE; // 最小甜度
+        int right=0,left=Integer.MAX_VALUE;
+        for(int sweet : sweetness){
+            right+=sweet;
+            left=Math.min(left, sweet);
+        } 
+        
+        int res=0; // 返回结果
+        while(left<right){ // 开始二分查找
+            int mid=(left+right)/2; // 中间值
+            int sum=0; // 当前份的甜度和
+            int count=0; // 已分完的份数
+            int min=Integer.MAX_VALUE; // 最小甜度
         // 从头开始循环每一块巧克力
-        for(int i=0;i<sweetness.length;i++){
-            // 累加当前份的甜度和
-            sum+=sweetness[i];
-            // 当甜度和大于等于mid时，代表可以分出一份
-            if(sum>=mid){
-                // 更新甜度最小的那一份
-                min=Math.min(min, sum);
+            for(int i=0;i<sweetness.length;i++){
+                sum+=sweetness[i];
+                if(sum>=mid){
+                    min=Math.min(min, sum);
                 // 如果已经分出了K+1份，说明当前mid这个甜度是可行的
                 // （剩下没分的部分可以分给任何一份）
-                if(++count==K+1){
+                    count++;
+                    if(count==K+1){
                     // 更新最大的返回结果
-                    res=Math.max(res, min);
-                    break; // 退出
+                        res=Math.max(res, min);
+                        break; // 退出
+                    }
+                    sum=0; // 重置sum，为了计算下一份的甜度和
                 }
-                sum=0; // 重置sum，为了计算下一份的甜度和
             }
-        }
+        
         // 如果当前mid是可行的（K+1份的甜度都大于等于mid）
         // 说明可以适当加大mid，看看是否还可行
-        if(count==K+1){
-            left=mid+1;
-        }else{ // 反之减小mid找合理解
-            right=mid;
+            if(count==K+1){
+                left=mid+1;
+            }else{ // 反之减小mid找合理解
+                right=mid;
+            }
         }
+        return res;
     }
-    return res;
-}
 }
 
 // method 2:
