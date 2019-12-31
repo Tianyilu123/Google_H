@@ -1,0 +1,20 @@
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int nums = 0, start = 0, res = 0;
+        int[] count = new int[256];
+        
+        for(int i=0; i<s.length(); i++) {
+            char ch = s.charAt(i);
+            if(count[ch] == 0) nums++;
+            count[ch]++;
+            while(nums > k) {
+                count[s.charAt(start)]--;
+                if(count[s.charAt(start)]==0) nums--;
+                start++;
+            }
+            res = Math.max(res, i-start+1);
+        }
+        
+        return res;
+    }
+}
