@@ -1,3 +1,42 @@
+// method1:
+class Solution {
+    public int[] smallestRange(List<List<Integer>> nums) {
+        int minX = 0, minY = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        int[] next = new int[nums.size()];
+        boolean flag = true;
+        // compare by current pointing number's value
+        PriorityQueue<Integer> minHeap = 
+        new PriorityQueue<Integer>((i,j)-> nums.get(i).get(next[i])-nums.get(j).get(next[j]));
+        for(int i=0; i<nums.size(); i++) {
+            minHeap.offer(i);
+            max = Math.max(max, nums.get(i).get(0));
+        }
+        
+        for(int i=0; i<nums.size() && flag; i++) {
+            for(int j=0; j<nums.get(i).size() && flag; j++) {
+                int minI = minHeap.poll();
+                if(minY - minX > max - nums.get(minI).get(next[minI])) {
+                    minX = nums.get(minI).get(next[minI]);
+                    minY = max;
+                }
+                next[minI]++;
+                if(next[minI] == nums.get(minI).size()) {
+                    flag = false;
+                    break;
+                }
+                minHeap.offer(minI);
+                max = Math.max(max, nums.get(minI).get(next[minI]));
+            }
+        }
+        return new int[]{minX, minY};
+    }
+}
+
+
+// time: O(n*m*log(m))
+// space: O(m)
+
+// method 2:
 public int[] smallestRange(List<List<Integer>> a) {
         PriorityQueue<int[]> q = new PriorityQueue<>(Comparator.comparingInt(o -> a.get(o[0]).get(o[1])));
         int max = Integer.MIN_VALUE, start = 0, end = Integer.MAX_VALUE;
