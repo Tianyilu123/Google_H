@@ -4,21 +4,24 @@ public class Solution extends Reader4 {
      * @param n   Number of characters to read
      * @return    The number of actual characters read
      */
-    private int buffPtr = 0;
-    private int buffCnt = 0;
-    private char[] buff = new char[4];
+    private int pointer = 0;
+    private int len = 0;
+    private char[] tmp = new char[4];
+    
     public int read(char[] buf, int n) {
-        int ptr = 0;
-        while (ptr < n) {
-            if (buffPtr == 0) {
-                buffCnt = read4(buff);
+        int idx = 0;
+        while(idx < n) {
+            if(pointer == 0) {
+                len = read4(tmp);
             }
-            if (buffCnt == 0) break;
-            while (ptr < n && buffPtr < buffCnt) {
-                buf[ptr++] = buff[buffPtr++];
+            if(len == 0) break;
+            while(idx < n && pointer < len) {
+                buf[idx] = tmp[pointer];
+                idx++;
+                pointer++;
             }
-            if (buffPtr >= buffCnt) buffPtr = 0;
+            if(pointer >= len) pointer = 0;
         }
-        return ptr;
+        return idx;
     }
 }
