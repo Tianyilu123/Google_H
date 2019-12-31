@@ -1,6 +1,6 @@
 class Solution {
-    static final int M = 1000000007;
-
+    // static final int M = 1000000007;
+    final int M = (int)Math.pow(10, 9)+7;
     public int checkRecord(int n) {
         long[] PorL = new long[n + 1]; // ending with P or L, no A
         long[] P = new long[n + 1]; // ending with P, no A
