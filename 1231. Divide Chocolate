@@ -8,7 +8,7 @@ class Solution {
         } 
         
         int res=0; // 返回结果
-        while(left<right){ // 开始二分查找
+        while(left<=right){ // 开始二分查找
             int mid=(left+right)/2; // 中间值
             int sum=0; // 当前份的甜度和
             int count=0; // 已分完的份数
@@ -35,7 +35,7 @@ class Solution {
             if(count==K+1){
                 left=mid+1;
             }else{ // 反之减小mid找合理解
-                right=mid;
+                right=mid-1;
             }
         }
         return res;
