@@ -13,26 +13,21 @@ class Solution {
             int sum=0; // 当前份的甜度和
             int count=0; // 已分完的份数
             int min=Integer.MAX_VALUE; // 最小甜度
-        // 从头开始循环每一块巧克力
-            for(int i=0;i<sweetness.length;i++){
+       
+            for(int i=0;i<sweetness.length;i++){  // 从头开始循环每一块巧克力
                 sum+=sweetness[i];
                 if(sum>=mid){
                     min=Math.min(min, sum);
-                // 如果已经分出了K+1份，说明当前mid这个甜度是可行的
-                // （剩下没分的部分可以分给任何一份）
                     count++;
-                    if(count==K+1){
-                    // 更新最大的返回结果
-                        res=Math.max(res, min);
+                    if(count==K+1){ // 如果已经分出了K+1份，说明当前mid这个甜度是可行的
+                        res=Math.max(res, min); // 更新最大的返回结果
                         break; // 退出
                     }
                     sum=0; // 重置sum，为了计算下一份的甜度和
                 }
             }
         
-        // 如果当前mid是可行的（K+1份的甜度都大于等于mid）
-        // 说明可以适当加大mid，看看是否还可行
-            if(count==K+1){
+            if(count==K+1){ // 如果当前mid是可行的（K+1份的甜度都大于等于mid); 说明可以适当加大mid，看看是否还可行
                 left=mid+1;
             }else{ // 反之减小mid找合理解
                 right=mid-1;
