@@ -1,40 +1,41 @@
-public class LFUCache {
+class LFUCache {
     class Node {
-        int key, val, cnt;
+        int key, val, freq;
         Node prev, next;
         Node(int key, int val) {
             this.key = key;
             this.val = val;
-            cnt = 1;
+            this.freq = 1;
         }
     }
     
-    class DLList {
+    class DLL {
         Node head, tail;
-        int size;
-        DLList() {
+        int cnt;
+        DLL() {
             head = new Node(0, 0);
             tail = new Node(0, 0);
             head.next = tail;
             tail.prev = head;
+            this.cnt = 0;
         }
         
-        void add(Node node) {
+        void add(Node node){
             head.next.prev = node;
             node.next = head.next;
             node.prev = head;
             head.next = node;
-            size++;
+            cnt++;
         }
         
         void remove(Node node) {
             node.prev.next = node.next;
             node.next.prev = node.prev;
-            size--;
+            cnt--;
         }
         
         Node removeLast() {
-            if (size > 0) {
+            if(size > 0) {
                 Node node = tail.prev;
                 remove(node);
                 return node;
@@ -43,26 +44,27 @@ public class LFUCache {
         }
     }
     
-    int capacity, size, min;
+    int capacity, size, minFreq;
     Map<Integer, Node> nodeMap;
-    Map<Integer, DLList> countMap;
+    Map<Integer, DLL> freqMap;
+    
     public LFUCache(int capacity) {
         this.capacity = capacity;
-        nodeMap = new HashMap<>();
-        countMap = new HashMap<>();
+        this.nodeMap = new HashMap<>();
+        this.freqMap = new HashMap<>();
     }
     
     public int get(int key) {
         Node node = nodeMap.get(key);
-        if (node == null) return -1;
+        if(node == null) return -1;
         update(node);
         return node.val;
     }
     
     public void put(int key, int value) {
-        if (capacity == 0) return;
+        if(capacity == 0) return;
         Node node;
-        if (nodeMap.containsKey(key)) {
+        if(nodeMap.containsKey(key)){
             node = nodeMap.get(key);
             node.val = value;
             update(node);
@@ -70,26 +72,26 @@ public class LFUCache {
         else {
             node = new Node(key, value);
             nodeMap.put(key, node);
-            if (size == capacity) {
-                DLList lastList = countMap.get(min);
+            if(size == capacity){
+                DLL lastList = freqMap.get(minFreq);
                 nodeMap.remove(lastList.removeLast().key);
                 size--;
             }
             size++;
-            min = 1;
-            DLList newList = countMap.getOrDefault(node.cnt, new DLList());
+            minFreq = 1;
+            DLL newList = freqMap.getOrDefault(node.freq, new DLL());
             newList.add(node);
-            countMap.put(node.cnt, newList);
+            freqMap.put(minFreq, newList);
         }
     }
     
     private void update(Node node) {
-        DLList oldList = countMap.get(node.cnt);
+        DLL oldList = freqMap.get(node.freq);
         oldList.remove(node);
-        if (node.cnt == min && oldList.size == 0) min++; 
-        node.cnt++;
-        DLList newList = countMap.getOrDefault(node.cnt, new DLList());
+        if(node.freq == minFreq && oldList.cnt == 0) minFreq++;
+        node.freq++;
+        DLL newList = freqMap.getOrDefault(node.freq, new DLL());
         newList.add(node);
-        countMap.put(node.cnt, newList);
+        freqMap.put(node.freq, newList);
     }
 }
