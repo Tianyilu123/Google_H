@@ -1,69 +1,60 @@
 class Solution {
     public String shortestSuperstring(String[] A) {
-        int n = A.length;
-        int[][] graph = new int[n][n];
-        // build the graph
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                graph[i][j] = calc(A[i], A[j]);
-                graph[j][i] = calc(A[j], A[i]);
-            }
-        }
-        int[][] dp = new int[1 << n][n];
-        int[][] path = new int[1 << n][n];
-        int last = -1, min = Integer.MAX_VALUE;
-		
-        // start TSP DP
-        for (int i = 1; i < (1 << n); i++) {
-            Arrays.fill(dp[i], Integer.MAX_VALUE);
-            for (int j = 0; j < n; j++) {
-                if ((i & (1 << j)) > 0) {
-                    int prev = i - (1 << j);
-                    if (prev == 0) {
-                        dp[i][j] = A[j].length();
-                    } else {
-                        for (int k = 0; k < n; k++) {
-                            if (dp[prev][k] < Integer.MAX_VALUE && dp[prev][k] + graph[k][j] < dp[i][j]) {
-                                dp[i][j] = dp[prev][k] + graph[k][j];
-                                path[i][j] = k;
-                            }
-                        }
+        List<String> list = new ArrayList<>(Arrays.asList(A));
+        
+        
+        while(true) {
+            if(list.size() == 1) break;
+            int saveLen = -1;
+            
+            int n = list.size();
+            int idx1 = 0, idx2 = 0;
+            String newStr = "";
+            
+            for(int i=0; i<n-1; i++) {
+                for(int j=i+1; j<n; j++) {
+                    String s1 = list.get(i);
+                    String s2 = list.get(j);
+                    String merged = merge(s1,s2);
+                    
+                    int saved = s1.length() + s2.length() - merged.length();
+                    if(saved > saveLen) {
+                        saveLen = saved;
+                        idx1 = i;
+                        idx2 = j;
+                        newStr = merged;
                     }
                 }
-                if (i == (1 << n) - 1 && dp[i][j] < min) {
-                    min = dp[i][j];
-                    last = j;
-                }
             }
+            
+            String str1 = list.get(idx1);
+            String str2 = list.get(idx2);
+            list.remove(str1);
+            list.remove(str2);
+            list.add(newStr);
         }
-		
-        // build the path
-        StringBuilder sb = new StringBuilder();
-        int cur = (1 << n) - 1;
-        Stack<Integer> stack = new Stack<>();
-        while (cur > 0) {
-            stack.push(last);
-            int temp = cur;
-            cur -= (1 << last);
-            last = path[temp][last];
-        }
-		
-        // build the result
-        int i = stack.pop();
-        sb.append(A[i]);
-        while (!stack.isEmpty()) {
-            int j = stack.pop();
-            sb.append(A[j].substring(A[j].length() - graph[i][j]));
-            i = j;
-        }
-        return sb.toString();
+        return list.get(0);
     }
-    private int calc(String a, String b) {
-        for (int i = 1; i < a.length(); i++) {
-            if (b.startsWith(a.substring(i))) {
-                return b.length() - a.length() + i;
+    
+    private String merge(String s1, String s2) {
+        int overlap1=0, overlap2=0;
+        int len1 = s1.length(), len2 = s2.length();
+        for(int len=1; len1>= len && len<=len2; len++) {
+            if(s1.substring(len1-len).equals(s2.substring(0, len))) {
+                overlap1 = len;
             }
         }
-        return b.length();
+        
+        for(int len=1; len2>=len && len<=len1; len++) {
+            if(s2.substring(len2-len).equals(s1.substring(0, len))) {
+                overlap2 = len;
+            }
+        }
+        
+        if(overlap1 >= overlap2){
+            return s1.substring(0, len1-overlap1)+s2;
+        } else{
+            return s2.substring(0, len2-overlap2)+s1;
+        }
     }
 }
