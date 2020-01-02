@@ -5,10 +5,12 @@ class Solution {
             "Fourteen", "Fifteen", "Sixteen", "Seventeen","Eighteen", "Nineteen"};
     private final String[] tenString = new String[]{"","","Twenty", "Thirty", "Forty", "Fifty",
                                           "Sixty", "Seventy", "Eighty", "Ninety"};
+    private final String[] bigString = new String[]{"Thousand","Million","Billion"};
+    
     public String numberToWords(int num) {
         if(num == 0)
             return "Zero";
-        String[] bigString = new String[]{"Thousand","Million","Billion"};
+        
         String result =  numberToWordsHelper(num%1000);
         num = num/1000;
         if(num > 0 && num%1000>0){
