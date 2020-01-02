@@ -1,0 +1,35 @@
+// method 1:
+class Solution {
+    public int jump(int[] nums) {
+        if(nums == null || nums.length == 0) return 0;
+        int res = 0;
+        int reach = 0;
+        int maxArea = 0;
+        for(int i=0; i<nums.length-1; i++) {
+            reach = Math.max(reach, nums[i] + i);
+            if(i==maxArea) {
+                maxArea = reach;
+                res++;
+            }
+        }
+        return res;
+    }
+}
+
+// method 2:
+public int jump(int[] nums) {
+        return jump(nums, -1, 1) - 1;
+    }
+
+    /**
+     * @param index current position
+     * @param max maximum distance
+     */
+    private int jump(int[] nums, int index, int max) {
+       if (index + max >= nums.length - 1) return 1;
+       int next = 0;
+       for (int i = 1; i <= max; i++) {
+           next = Math.max(next, nums[index + i] - (max - i));
+       }
+       return 1 + jump(nums, index + max, next);
+    }
