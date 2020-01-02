@@ -1,0 +1,30 @@
+class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+        if(envelopes == null || envelopes.length == 0) return 0;
+        Arrays.sort(envelopes, new Comparator<int[]>(){
+            @Override
+            public int compare(int[] e1, int[] e2) {
+                if(e1[0] == e2[0]) return e2[1]-e1[1];
+                return e1[0]-e2[0];
+            }
+        });
+        
+        int len = 0;
+        int[] dp = new int[envelopes.length];
+        
+        for(int[] envelope : envelopes) {
+            int start = 0, end = len-1;
+            while(start <= end) {
+                int mid = (end - start)/2 + start;
+                if(dp[mid] < envelope[1])
+                    start = mid + 1;
+                else
+                    end = mid - 1;
+            }
+            dp[start] = envelope[1];
+            if(start == len)
+                len++;
+        }
+        return len;
+    }
+}
