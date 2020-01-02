@@ -1,9 +1,9 @@
 class Solution {
-    String[] digitString = new String[]{"Zero", "One", "Two", "Three", "Four", 
-                                            "Five", "Six", "Seven", "Eight", "Nine"};
-    String[] teenString = new String[]{"Ten", "Eleven", "Twelve", "Thirteen", 
+    private final String[] digitString = new String[]{"Zero", "One", "Two", "Three", 
+                                        "Four", "Five", "Six", "Seven", "Eight", "Nine"};
+    private final String[] teenString = new String[]{"Ten", "Eleven", "Twelve", "Thirteen", 
             "Fourteen", "Fifteen", "Sixteen", "Seventeen","Eighteen", "Nineteen"};
-    String[] tenString = new String[]{"","","Twenty", "Thirty", "Forty", "Fifty",
+    private final String[] tenString = new String[]{"","","Twenty", "Thirty", "Forty", "Fifty",
                                           "Sixty", "Seventy", "Eighty", "Ninety"};
     public String numberToWords(int num) {
         if(num == 0)
