@@ -1,0 +1,26 @@
+class Solution {
+    public int maxPoints(int[][] p) {
+        int n = p.length;
+        if (n < 3) return n;
+        int nmax = 0;
+        for (int k1 = 0; k1 < n; k1++) {
+            for (int k2 = k1 + 1; k2 < n; k2++) {
+                long a = p[k1][1] - p[k2][1];
+                long b = p[k2][0] - p[k1][0];
+                long c = p[k1][0] * p[k2][1] - p[k2][0] * p[k1][1];
+                boolean isDuplicate = (a == 0 && b == 0);
+                int count = 0;
+                for (int k3 = 0; k3 < n; k3++) {
+                    if (isDuplicate) {
+                        if (p[k3][0] == p[k1][0] && p[k3][0] == p[k1][1]) count++;
+                    } else {
+                        if (a * p[k3][0] + b * p[k3][1] + c == 0) count++;
+                    }
+                
+                    nmax = Math.max(nmax,count);
+                }
+            }
+        }
+        return nmax;
+    }
+}
