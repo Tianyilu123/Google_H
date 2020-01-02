@@ -35,7 +35,7 @@ class LFUCache {
         }
         
         Node removeLast() {
-            if(size > 0) {
+            if(cnt > 0) {
                 Node node = tail.prev;
                 remove(node);
                 return node;
@@ -43,6 +43,17 @@ class LFUCache {
             else return null;
         }
     }
+    
+    private void update(Node node) {
+        DLL oldList = freqMap.get(node.freq);
+        oldList.remove(node);
+        if(node.freq == minFreq && oldList.cnt == 0) minFreq++;
+        node.freq++;
+        DLL newList = freqMap.getOrDefault(node.freq, new DLL());
+        newList.add(node);
+        freqMap.put(node.freq, newList);
+    }
+    
     
     int capacity, size, minFreq;
     Map<Integer, Node> nodeMap;
@@ -84,14 +95,5 @@ class LFUCache {
             freqMap.put(minFreq, newList);
         }
     }
-    
-    private void update(Node node) {
-        DLL oldList = freqMap.get(node.freq);
-        oldList.remove(node);
-        if(node.freq == minFreq && oldList.cnt == 0) minFreq++;
-        node.freq++;
-        DLL newList = freqMap.getOrDefault(node.freq, new DLL());
-        newList.add(node);
-        freqMap.put(node.freq, newList);
-    }
 }
+
