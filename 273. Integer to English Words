@@ -1,4 +1,10 @@
 class Solution {
+    String[] digitString = new String[]{"Zero", "One", "Two", "Three", "Four", 
+                                            "Five", "Six", "Seven", "Eight", "Nine"};
+    String[] teenString = new String[]{"Ten", "Eleven", "Twelve", "Thirteen", 
+            "Fourteen", "Fifteen", "Sixteen", "Seventeen","Eighteen", "Nineteen"};
+    String[] tenString = new String[]{"","","Twenty", "Thirty", "Forty", "Fifty",
+                                          "Sixty", "Seventy", "Eighty", "Ninety"};
     public String numberToWords(int num) {
         if(num == 0)
             return "Zero";
@@ -20,12 +26,7 @@ class Solution {
     }
 
     public String numberToWordsHelper(int num){
-        String[] digitString = new String[]{"Zero", "One", "Two", "Three", "Four", 
-                                            "Five", "Six", "Seven", "Eight", "Nine"};
-        String[] teenString = new String[]{"Ten", "Eleven", "Twelve", "Thirteen", 
-            "Fourteen", "Fifteen", "Sixteen", "Seventeen","Eighteen", "Nineteen"};
-        String[] tenString = new String[]{"","","Twenty", "Thirty", "Forty", "Fifty",
-                                          "Sixty", "Seventy", "Eighty", "Ninety"};
+        
         String result = "";
         if(num > 99){
             result += digitString[num/100] + " Hundred ";
