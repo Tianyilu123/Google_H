@@ -1,9 +1,9 @@
 class Solution {
-    class DSU {
+    class UF {
         int[] size;
         int[] root;
         
-        public DSU(int n) {
+        public UF(int n) {
             size = new int[n+1];
             root = new int[n+1];
             Arrays.fill(size, 1);
@@ -13,9 +13,8 @@ class Solution {
         }
         
         public int find(int x) {
-            if(root[x] != x) {
+            if(root[x] != x)
                 root[x] = find(root[x]);
-            }
             return root[x];
         }
         
@@ -33,9 +32,10 @@ class Solution {
             return true;
         }
     }
+    
     public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
-        DSU dsu = new DSU(n);
-        PriorityQueue<int[]> heap = new PriorityQueue<>((a,b)->a[2]-b[2]);
+        UF uf = new UF(n);
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b)->a[2]-b[2]);
         for(int i=0; i<wells.length; i++) {
             heap.offer(new int[]{0, i+1, wells[i]});
         }
@@ -47,11 +47,10 @@ class Solution {
         int res = 0;
         while(!heap.isEmpty()) {
             int[] cur = heap.poll();
-            if(dsu.union(cur[0], cur[1])) {
+            if(uf.union(cur[0], cur[1])) {
                 res += cur[2];
             }
         }
-        
         return res;
     }
 }
