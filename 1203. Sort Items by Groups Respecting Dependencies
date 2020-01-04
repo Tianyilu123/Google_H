@@ -1,4 +1,5 @@
-class Solution {
+
+  class Solution {
     public int[] sortItems(int n, int m, int[] group, List<List<Integer>> beforeItems) {
         
         //sort the element first
@@ -6,17 +7,23 @@ class Solution {
         int[] visited = new int[n];
         for(int i = 0; i < n; i++) {
             if(visited[i] == 2) continue;
-            if(!dfs(beforeItems, visited, itemRes, i)) return new int[0]; // anytime there is a cycle, stop and return
+            if(!dfs(beforeItems, visited, itemRes, i)) 
+                return new int[0]; // anytime there is a cycle, stop and return
         }
         
         //sort the group second
         
         //first we give -1 group a unique group ID
-        for(int i = 0; i < n; i++) if(group[i] == -1) group[i] = m++;
+        for(int i = 0; i < n; i++) if(group[i] == -1) 
+            group[i] = m++;
+        
         //then we make the same before list for group
         List<List<Integer>> beforeGroups = new ArrayList<>();
-        for(int i = 0; i < m; i++) beforeGroups.add(new ArrayList<>());
+        for(int i = 0; i < m; i++) 
+            beforeGroups.add(new ArrayList<>());
+        
         Map<Integer,Set<Integer>> tmp = new HashMap<>();//use treemap to maintain group information
+        
         for(int i = 0; i < n; i++){
             tmp.putIfAbsent(group[i], new HashSet<>());
             for(int j : beforeItems.get(i)) if(group[i] != group[j]) tmp.get(group[i]).add(group[j]);
@@ -38,13 +45,16 @@ class Solution {
         
         //now we have sorted groups and items, we then put items into each group 
         List<Integer>[] groupItems = new ArrayList[m];
-        for(int i = 0; i < m; i++) groupItems[i] = new ArrayList<Integer>();
-        for(int i : itemRes) groupItems[group[i]].add(i);
+        for(int i = 0; i < m; i++) 
+            groupItems[i] = new ArrayList<Integer>();
+        for(int i : itemRes) 
+            groupItems[group[i]].add(i);
         
         int[] res = new int[n];
         int i = 0;
         for(int g: groupRes) {
-            for(int item : groupItems[g]) res[i++] = item;
+            for(int item : groupItems[g]) 
+                res[i++] = item;
         }
         return res;
     }
@@ -52,10 +62,13 @@ class Solution {
     private boolean dfs(List<List<Integer>> beforeItems, int[] visited, List<Integer> res, int index) {
         visited[index] = 1;//visiting
         List<Integer> cur = beforeItems.get(index);
+        
         for(int i:cur){
-            if(visited[i] == 1) return false;
+            if(visited[i] == 1) 
+                return false;
             if(visited[i] == 0)
-                if(!dfs(beforeItems, visited, res, i)) return false;
+                if(!dfs(beforeItems, visited, res, i)) 
+                    return false;
         }
         visited[index] = 2;//finished visiting
         
