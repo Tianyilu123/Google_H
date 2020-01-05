@@ -1,37 +1,25 @@
 // method1:
 class Solution {
     public int[] smallestRange(List<List<Integer>> nums) {
-        int minX = 0, minY = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
-        int[] next = new int[nums.size()];
-        boolean flag = true;
-        // compare by current pointing number's value
-        PriorityQueue<Integer> minHeap = 
-        new PriorityQueue<Integer>((i,j)-> nums.get(i).get(next[i])-nums.get(j).get(next[j]));
-        for(int i=0; i<nums.size(); i++) {
-            minHeap.offer(i);
-            max = Math.max(max, nums.get(i).get(0));
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a, b) -> a[0] - b[0]);
+        int max = Integer.MIN_VALUE;
+        
+        for(int i = 0; i < nums.size(); i++) {
+        	max = Math.max(max, nums.get(i).get(0));
+        	pq.add(new int[] {nums.get(i).get(0), i, 0});
         }
         
-        for(int i=0; i<nums.size() && flag; i++) {
-            for(int j=0; j<nums.get(i).size() && flag; j++) {
-                int minI = minHeap.poll();
-                if(minY - minX > max - nums.get(minI).get(next[minI])) {
-                    minX = nums.get(minI).get(next[minI]);
-                    minY = max;
-                }
-                next[minI]++;
-                if(next[minI] == nums.get(minI).size()) {
-                    flag = false;
-                    break;
-                }
-                minHeap.offer(minI);
-                max = Math.max(max, nums.get(minI).get(next[minI]));
-            }
+        int[] result = {pq.peek()[0], max};
+        while(result[1] - result[0] != 0 && pq.peek()[2] + 1 < nums.get(pq.peek()[1]).size()) {
+        	int[] curr = pq.poll();
+        	pq.add(new int[] {nums.get(curr[1]).get(curr[2] + 1), curr[1], curr[2] + 1});
+        	max = Math.max(max, nums.get(curr[1]).get(curr[2] + 1));
+        	if(max - pq.peek()[0] < result[1] - result[0]) 
+                result = new int[] {pq.peek()[0], max};
         }
-        return new int[]{minX, minY};
+        return result;
     }
 }
-
 
 // time: O(n*m*log(m))
 // space: O(m)
