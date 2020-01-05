@@ -69,3 +69,111 @@ class Solution {
         }
     }
 }
+
+
+// method 2:
+class Solution {
+    private String beginWord = null, endWord = null;
+    private Map<String, List<String>> beginGraph = null, endGraph = null;
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> res = new ArrayList<List<String>>();
+        Set<String> wordSet = new HashSet();
+        wordSet.addAll(wordList);
+        if(!wordSet.contains(endWord))  return res;
+        wordSet.remove(beginWord);
+        wordSet.remove(endWord);
+        
+        Set<String> beginSet = new HashSet();
+        Set<String> endSet = new HashSet();
+        beginSet.add(beginWord);
+        endSet.add(endWord);
+        
+        this.beginWord = beginWord;
+        this.endWord = endWord;
+        beginGraph = new HashMap();
+        endGraph = new HashMap();
+        
+        boolean isEnd = false;
+        
+        while(!beginSet.isEmpty() && !endSet.isEmpty()){
+            Set<String> set1 = beginSet;
+            Set<String> set2 = endSet;
+            Map<String, List<String>> graph = beginGraph;
+            
+            boolean beginToEnd = true;
+            if(beginSet.size() > endSet.size()){
+                set1 = endSet;
+                set2 = beginSet;
+                graph = endGraph;
+                beginToEnd = false;
+            }
+            HashSet<String> nextLevel = new HashSet<String>();
+            HashSet<String> sourceList = new HashSet<String>();
+            for(String cur : set1){
+                char cc[] = cur.toCharArray();
+                for(int i = 0; i < cc.length; i++){
+                    char temp = cc[i];
+                    for(char c = 'a'; c <= 'z'; c++){
+                        cc[i] = c;
+                        String next = String.valueOf(cc);
+                        if(c != temp && (wordSet.contains(next) || set2.contains(next))) {
+                            if(set2.contains(next)){
+                                sourceList.add(next);
+                                isEnd = true;
+                            }
+                            if(!nextLevel.contains(next)){
+                                nextLevel.add(next);
+                            }
+                            if(!graph.containsKey(next)){
+                                graph.put(next, new ArrayList<String>());
+                            }
+                            List<String> nextList = graph.get(next);
+                            nextList.add(cur);
+                            graph.put(next, nextList);
+                        }
+                    }
+                    cc[i] = temp;
+                }
+            }
+            if(beginToEnd){
+                beginSet = nextLevel;
+            }
+            else{
+                endSet = nextLevel;
+            }
+            wordSet.removeAll(nextLevel);
+            if(isEnd){
+                for(String source : sourceList){
+                    List<String> path = new LinkedList<String>();
+                    path.add(source);
+                    dfs(res, path, source, source, true);
+                }
+                return res;
+            }
+        }
+        return res;
+    }
+    private void dfs(List<List<String>> res, List<String> path, String cur, String source, boolean beginToEnd){
+        if(cur.equals(endWord) && beginToEnd){  // prevent source == endWord --> go dead loop
+            dfs(res, path, source, source, false);
+        }
+        else if(cur.equals(beginWord) && !beginToEnd){
+            res.add(new ArrayList<String>(path));
+        }
+        else{
+            List<String> nextList = beginToEnd ? endGraph.get(cur) : beginGraph.get(cur);
+            for(String next : nextList){
+                if(beginToEnd){
+                    path.add(next);
+                    dfs(res, path, next, source, beginToEnd);
+                    path.remove(path.size() - 1);
+                }
+                else{
+                    path.add(0, next);
+                    dfs(res, path, next, source, beginToEnd);
+                    path.remove(0);
+                }
+            }
+        }
+    }
+}
