@@ -1,0 +1,56 @@
+class EndPoint implements Comparable<EndPoint>{
+    int height;
+    boolean isStart;
+    int val;
+    public EndPoint(int h, boolean is, int v){
+        height = h;
+        isStart = is;
+        val = v;
+    }
+    @Override
+    public int compareTo(EndPoint that){
+        if(this.val != that.val) return this.val - that.val;
+        
+        else{
+            //双左就高在前
+            if(this.isStart && that.isStart) return that.height - this.height;
+            //双右就低在前
+            else if(!this.isStart && !that.isStart) return this.height - that.height;
+            //一左一右，start在前
+            else{
+                if(this.isStart) return -1;
+                else
+                    return 1;
+            }
+        }
+    }
+}
+
+class Solution {
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        List<List<Integer>> res = new ArrayList();
+        if(buildings == null || buildings.length == 0) return res;
+        
+        List<EndPoint> eps = new ArrayList();
+        for(int[] b : buildings){
+            eps.add(new EndPoint(b[2], false, b[1]));
+            eps.add(new EndPoint(b[2], true, b[0]));
+        }
+        Collections.sort(eps);
+        //maxHeap 代表pool:存高度就行了，不care是谁的
+        Queue<Integer> maxHeap = new PriorityQueue<Integer>((i1, i2) -> i2 - i1);
+        for(EndPoint ep : eps){
+            if(ep.isStart){  
+                // 画点
+                if(maxHeap.isEmpty() || ep.height > maxHeap.peek())     res.add(Arrays.asList(ep.val, ep.height));
+                maxHeap.offer(ep.height);
+            }
+            else{  // end
+                maxHeap.remove(ep.height);
+                if(maxHeap.isEmpty() || ep.height > maxHeap.peek())     res.add(Arrays.asList(ep.val, maxHeap.isEmpty() ? 0 : maxHeap.peek()));
+            }
+        }
+        return res;
+    }
+}
+
