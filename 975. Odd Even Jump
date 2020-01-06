@@ -5,19 +5,21 @@ class Solution {
         TreeMap<Integer, Integer> map = new TreeMap<>();
         map.put(A[n - 1], n - 1);
         
-        boolean[] odd = new boolean[n], even = new boolean[n];
-        odd[n - 1] = even[n - 1] = true;
+        boolean[] oddStart = new boolean[n];
+        boolean[] evenStart = new boolean[n];
+        oddStart[n - 1] = evenStart[n - 1] = true;
         
         for (int i = n - 2; i >= 0; i--) {
-            Map.Entry oddEntry = map.ceilingEntry(A[i]);
-            Map.Entry evenEntry = map.floorEntry(A[i]);
+            Map.Entry oddEnd = map.ceilingEntry(A[i]);
+            Map.Entry evenEnd = map.floorEntry(A[i]); // 第偶数次到达这里
             
-            if (oddEntry != null) 
-                odd[i] = even[(int)oddEntry.getValue()];
-            if (evenEntry != null) 
-                even[i] = odd[(int)evenEntry.getValue()];
+            if (oddEnd != null) 
+                oddStart[i] = evenStart[(int)oddEnd.getValue()];
+            if (evenEnd != null) // 如果能到达这里，一定前面有一个even
+                evenStart[i] = oddStart[(int)evenEnd.getValue()]; // 有没有oddStart 能到evenEnd 这里
             
-            if (odd[i]) res++;
+            if (oddStart[i]) 
+                res++;
             map.put(A[i], i);
         }
         return res;
