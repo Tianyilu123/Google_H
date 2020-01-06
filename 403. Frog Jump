@@ -1,0 +1,20 @@
+class Solution {
+    public boolean canCross(int[] stones) {
+        HashMap<Integer, HashSet<Integer>> map = new HashMap<>();
+        for(int stone : stones) {
+            map.put(stone, new HashSet<>());
+        }
+        map.get(0).add(0);
+        
+        for(int i=0; i<stones.length; i++) {
+            for(int key : map.get(stones[i])) {
+                for(int dist = key-1; dist<=key+1; dist++) {
+                    if(dist > 0 && map.containsKey(stones[i]+dist)) {
+                        map.get(stones[i]+dist).add(dist);
+                    }
+                }
+            }
+        }
+        return map.get(stones[stones.length-1]).size() > 0;
+    }
+}
