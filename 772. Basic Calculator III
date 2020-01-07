@@ -1,8 +1,9 @@
 class Solution {
     public int calculate(String s) {
         Stack<Integer> stack = new Stack<>();
-        char sign = '+';
-        int res = 0, prev = 0;
+        char preSign = '+';
+        int res = 0;
+        int prev = 0;
         
         for(int i=0; i<s.length(); i++) {
             char ch = s.charAt(i);
@@ -10,18 +11,19 @@ class Solution {
                 int j = findClose(s.substring(i));
                 prev = calculate(s.substring(i+1, i+j));
                 i += j;
-            } if(Character.isDigit(ch)) {
+            }
+            else if(Character.isDigit(ch)) {
                 prev = prev*10 + ch-'0';
-                
-            } if(ch == '+' || ch == '-' || ch == '*' || ch == '/' || i == s.length()-1) {
-                switch(sign) {
+            } 
+            if(ch == '+' || ch == '-' || ch == '*' || ch == '/' || i == s.length()-1) {
+                switch(preSign) {
                     case '+': stack.push(prev); break;
                     case '-': stack.push(-prev); break;
                     case '*': stack.push(stack.pop()*prev); break;
                     case '/': stack.push(stack.pop()/prev); break;
                 }
                 prev = 0;
-                sign = ch;
+                preSign = ch;
             }
         }
         
@@ -35,14 +37,15 @@ class Solution {
         int delta = 0;
         int i=0;
         for(i=0; i<s.length(); i++) {
-            if(s.charAt(i) == '(') delta++;
+            if(s.charAt(i) == '(')
+                delta++;
             else if(s.charAt(i) == ')') {
                 delta--;
                 if(delta == 0) break;
-            } else
+            }
+            else
                 continue;
         }
-        
         return i;
     }
 }
