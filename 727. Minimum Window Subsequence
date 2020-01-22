@@ -1,4 +1,5 @@
 // method 1:
+// S = "bbbbdde", T = "bde"
 class Solution {
     public String minWindow(String S, String T) {
         int lenS = S.length(), lenT = T.length();
