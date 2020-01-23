@@ -15,22 +15,23 @@ class Solution {
         if (isConfusingNumber(cur)) {
             res++;
         }
-        for (Integer i : map.keySet()) {
-            if (cur * 10 + i <= N && cur * 10 + i != 0) {
-                helper(N, cur * 10 + i);
+        for (Integer key : map.keySet()) {
+            if (cur * 10 + key <= N && cur * 10 + key != 0) {
+                helper(N, cur * 10 + key);
             }
         }
     }
     private boolean isConfusingNumber(long n) {
-        long src = n;
-        long res = 0;
+        long orig = n;
+        long num = 0;
         while (n > 0) {
-            res = res * 10 + map.get((int) n % 10); 
+            num = num * 10 + map.get((int) n % 10); 
             n /= 10;
         }
-        return res != src;
+        return num != orig;
     }
 }
+
 
 
 // method 2:
