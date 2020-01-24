@@ -1,3 +1,6 @@
+// "abefcdgiescdfimde"
+// "ab*cd?i*de"
+
 class Solution {
     public boolean isMatch(String s, String p) {
         int sp = 0;
