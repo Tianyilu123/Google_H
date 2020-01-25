@@ -1,49 +1,49 @@
 class Solution {
-    private final String[] digitString = new String[]{"Zero", "One", "Two", "Three", 
-                                        "Four", "Five", "Six", "Seven", "Eight", "Nine"};
-    private final String[] teenString = new String[]{"Ten", "Eleven", "Twelve", "Thirteen", 
-            "Fourteen", "Fifteen", "Sixteen", "Seventeen","Eighteen", "Nineteen"};
-    private final String[] tenString = new String[]{"","","Twenty", "Thirty", "Forty", "Fifty",
-                                          "Sixty", "Seventy", "Eighty", "Ninety"};
-    private final String[] bigString = new String[]{"Thousand","Million","Billion"};
+    String[] digits = new String[]{"Zero", "One","Two","Three","Four","Five","Six","Seven","Eight",
+                                   "Nine"};
+    String[] teens = new String[]{"Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen",
+                               "Seventeen","Eighteen","Nineteen"};
+    String[] tens = new String[]{"","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy",
+                                 "Eighty",
+                              "Ninety"};
+    String[] thousands = new String[]{"Thousand","Million","Billion"};
     
     public String numberToWords(int num) {
-        if(num == 0)
-            return "Zero";
+        if(num == 0) return "Zero";
+        String res = helper(num % 1000);
         
-        String result =  numberToWordsHelper(num%1000);
         num = num/1000;
-        if(num > 0 && num%1000>0){
-            result = numberToWordsHelper(num%1000) + "Thousand " + result;
-        }
+        if(num > 0 && num%1000>0)
+            res = helper(num % 1000) + "Thousand " + res;
+        
         num = num/1000;
-        if(num > 0 && num%1000>0){
-            result = numberToWordsHelper(num%1000) + "Million " + result;
-        }
+        if(num > 0 && num % 1000 > 0)
+            res = helper(num % 1000) + "Million " + res;
+        
         num = num/1000;
-        if(num > 0){
-            result = numberToWordsHelper(num%1000) + "Billion " + result;
-        }
-        return result.trim();
+        if(num > 0 && num % 1000 > 0)
+            res = helper(num % 1000) + "Billion " + res;
+        
+        return res.trim();
     }
-
-    public String numberToWordsHelper(int num){
-        
-        String result = "";
-        if(num > 99){
-            result += digitString[num/100] + " Hundred ";
-        }
+    
+    private String helper(int num) {
+        String res = "";
+        if(num > 99)
+            res += digits[num/100] + " Hundred ";
         num = num % 100;
-        if(num < 20 && num > 9){
-            result += teenString[num%10]+" ";
-        }else{
-            if(num > 19){
-                result += tenString[num/10]+" ";
+        if(num < 20 && num > 9) {
+            res += teens[num % 10] + " ";
+        } 
+        else {
+            if(num > 19) {
+                res += tens[num/10] + " ";
             }
             num = num % 10;
-            if(num > 0)
-                result += digitString[num]+" ";
+            if(num > 0){
+                res += digits[num] + " ";
+            }
         }
-        return result;
+        return res;
     }
 }
